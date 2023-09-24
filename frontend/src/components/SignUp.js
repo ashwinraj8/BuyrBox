@@ -1,13 +1,12 @@
 import React, { useState,useEffect } from "react";
-import {useNavigate,Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const SignUp = ()=>{
 
-    const [name, setName] = useState("");
-    const [password,setPassword] = useState("");
-    const [email,setEmail] = useState("");
-    // const navigate = useNavigate();
-    const navigate = useNavigate();
+    const [name, setName] = useState(""),
+    [password,setPassword] = useState(""),
+    [email,setEmail] = useState(""),
+    navigate = useNavigate();
 
     useEffect(()=>{
 

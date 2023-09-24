@@ -2,19 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 
-
 const ProductList = () => {
 
-    const [products, setProducts] = useState([]);
-    const { t } = useTranslation();
+    const [products, setProducts] = useState([]),
+    [isLoading, setIsLoading] = useState(true),
+    { t } = useTranslation();
 
     useEffect(() => {
         getProducts();
     }, [])
     const getProducts = async () => {
-        let result = await fetch('http://localhost:5000/products');
-        result = await result.json();
-        setProducts(result);
+        setIsLoading(true);
+        try {
+            let result = await fetch('http://localhost:5000/products');
+            result = await result.json();
+            setProducts(result);
+        } catch (error) {
+            console.error('An error occurred:', error);
+            setProducts([]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const deleteProduct = async (id) => {
@@ -33,7 +41,6 @@ const ProductList = () => {
             if (key) {
                 let result = await fetch(`http://localhost:5000/search/${key}`);
                 result = await result.json();
-                console.log(result);
                 if (result) {
                     setProducts(result);
                 }
@@ -70,19 +77,22 @@ const ProductList = () => {
                     </li>
                     <li>{t("operation")}</li>
                 </ul>
-                {
-                    products.length ? products.map((item, index) =>
-                        <ul key={item._id}>
-                            <li>{index + 1}</li>
-                            <li>{item.name}</li>
-                            <li>$ {item.price}</li>
-                            <li>{item.category}</li>
-                            <li><button onClick={() => deleteProduct(item._id)}>{t("deleteButton")}</button>
-                                <Link to={'/update/' + item._id}>{t("updateButton")}</Link>
-                            </li>
-                        </ul>
-                    ) : <h1>{t("productNotFound")}</h1>
-                }
+                {isLoading ? (
+                    <div>Loading...</div>
+                ):(
+                        products.length ? products.map((item, index) =>
+                            <ul key={item._id}>
+                                <li>{index + 1}</li>
+                                <li>{item.name}</li>
+                                <li>$ {item.price}</li>
+                                <li>{item.category}</li>
+                                <li><button onClick={() => deleteProduct(item._id)}>{t("deleteButton")}</button>
+                                    <Link to={'/update/' + item._id}>{t("updateButton")}</Link>
+                                </li>
+                            </ul>
+                        ) : <h1>{t("productNotFound")}</h1>
+                )}
+                
             </div>
         </>
     )
