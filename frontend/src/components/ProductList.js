@@ -2,19 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 
-
 const ProductList = () => {
 
-    const [products, setProducts] = useState([]);
-    const {t} = useTranslation();
+    const [products, setProducts] = useState([]),
+    [isLoading, setIsLoading] = useState(true),
+    { t } = useTranslation();
 
     useEffect(() => {
         getProducts();
     }, [])
     const getProducts = async () => {
-        let result = await fetch('http://localhost:5000/products');
-        result = await result.json();
-        setProducts(result);
+        setIsLoading(true);
+        try {
+            let result = await fetch('http://localhost:5000/products');
+            result = await result.json();
+            setProducts(result);
+        } catch (error) {
+            console.error('An error occurred:', error);
+            setProducts([]);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const deleteProduct = async (id) => {
@@ -27,61 +35,66 @@ const ProductList = () => {
     }
 
     const searchHandle = async (e) => {
-        console.log(e.target.value)
-        let key = e.target.value;
-        if (key) {
-
-            let result = await fetch(`http://localhost:5000/search/${key}`);
-            result = await result.json();
-            if (result) {
-                setProducts(result);
+        try {
+            // console.log(e.target.value)
+            let key = e.target.value;
+            if (key) {
+                let result = await fetch(`http://localhost:5000/search/${key}`);
+                result = await result.json();
+                if (result) {
+                    setProducts(result);
+                }
             }
-
+            else {
+                getProducts();
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
         }
-        else {
-            getProducts();
-        }
-
     }
 
-    console.log("Products", products);
     return (
-        <div className="product-list">
-            <h3>{t("productsList")}</h3>
-            <input className="search-product-box" 
-            onChange={searchHandle} 
-            type='text'
-            placeholder={t("searchProductPlaceholder")}
-            />                  
-            <ul>
-                <li>
-                {t("sNo")}
-                </li>
-                <li>
-                {t("name")}
-                </li>
-                <li>
-                {t("price")}
-                </li>
-                <li>
-                {t("category")}
-                </li>
-                <li>{t("operation")}</li>
-            </ul>
-            {
-                products.length ? products.map((item, index) =>
-                    <ul key={item._id}>
-                        <li>{index + 1}</li>
-                        <li>{item.name}</li>
-                        <li>$ {item.price}</li>
-                        <li>{item.category}</li>
-                        <li><button onClick={() => deleteProduct(item._id)}>Delete</button>
-                            <Link to={'/update/' + item._id}>{t("updateButton")}</Link>
-                        </li>
-                    </ul>
-                ) : <h1>{t("productNotFound")}</h1>
-            }
-        </div>
+        <>
+            <div className="product-list">
+                <h3>{t("productsList")}</h3>
+                <input className="search-product-box"
+                    onChange={searchHandle}
+                    type='text'
+                    placeholder={t("searchProductPlaceholder")}
+                />
+                <ul>
+                    <li>
+                        {t("sNo")}
+                    </li>
+                    <li>
+                        {t("name")}
+                    </li>
+                    <li>
+                        {t("price")}
+                    </li>
+                    <li>
+                        {t("category")}
+                    </li>
+                    <li>{t("operation")}</li>
+                </ul>
+                {isLoading ? (
+                    <div>Loading...</div>
+                ):(
+                        products.length ? products.map((item, index) =>
+                            <ul key={item._id}>
+                                <li>{index + 1}</li>
+                                <li>{item.name}</li>
+                                <li>$ {item.price}</li>
+                                <li>{item.category}</li>
+                                <li><button onClick={() => deleteProduct(item._id)}>{t("deleteButton")}</button>
+                                    <Link to={'/update/' + item._id}>{t("updateButton")}</Link>
+                                </li>
+                            </ul>
+                        ) : <h1>{t("productNotFound")}</h1>
+                )}
+                
+            </div>
+        </>
     )
 }
 

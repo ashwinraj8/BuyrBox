@@ -8,5 +8,6 @@
     "price":"Price",
     "category":"Category",
     "operation":"Operation",
-    "updateButton":"Update"
+    "updateButton":"Update",
+    "deleteButton":"Delete"
 }
