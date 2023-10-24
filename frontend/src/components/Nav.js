@@ -17,9 +17,9 @@ const Nav = () => {
             {auth ? <ul className='nav-ul '>
                 <li><Link to="/">Products</Link></li>
                 <li><Link to="/add">Add</Link></li>
-                <li><Link to="/update">Update</Link></li>
+                <li><Link to={`/profileandlistings/${JSON.parse(auth)._id}`}>Profile & Listings</Link></li>
                 {/* <li></li> */}
-                <li><Link to="/profile">Profile</Link></li>
+                <li><Link to='/profile/'>Notification</Link></li>
                 <li><Link onClick={logout} to="/signup ">Logout ({JSON.parse(auth).name})</Link></li>
                 {/* <li><Link to="/login">Login</Link></li> */}
                 {/* <li>{auth ? <Link onClick={logout} to="/signup ">Logout</Link> :  <Link to="/signup">SignUp</Link>}</li> */}

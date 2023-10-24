@@ -1,6 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+// axios.interceptors.response.use(
+//     (response) => {
+//       console.log('Axios interceptor response data--->>',response);
+//         Object.assign(response,{testApi:'1212'})
+//       return response;
+//     },
+//     (error) => {
+//       console.error('An error occurred:', error);
+//       // Handle the error as needed
+//       return Promise.reject(error);
+//     }
+//   );
+
+//   axios.interceptors.request.use(
+//     (request) => {
+//       console.log('Axios interceptor request data--->>',request);
+//         // Object.assign(response.config,{testApi:'1212'})
+//       return request;
+//     },
+//     (error) => {
+//       console.error('An error occurred:', error);
+//       // Handle the error as needed
+//       return Promise.reject(error);
+//     }
+//   );
 
 const ProductList = () => {
 
@@ -14,9 +41,10 @@ const ProductList = () => {
     const getProducts = async () => {
         setIsLoading(true);
         try {
-            let result = await fetch('http://localhost:5000/products');
-            result = await result.json();
-            setProducts(result);
+            const response = await axios.get('http://localhost:5000/products');
+            console.log(response.data);
+            for(let id of response.data) console.log(id.userId);
+            setProducts(response.data);
         } catch (error) {
             console.error('An error occurred:', error);
             setProducts([]);
@@ -75,7 +103,7 @@ const ProductList = () => {
                     <li>
                         {t("category")}
                     </li>
-                    <li>{t("operation")}</li>
+                    <li>{t("Details")}</li>
                 </ul>
                 {isLoading ? (
                     <div>Loading...</div>
@@ -86,8 +114,9 @@ const ProductList = () => {
                                 <li>{item.name}</li>
                                 <li>$ {item.price}</li>
                                 <li>{item.category}</li>
-                                <li><button onClick={() => deleteProduct(item._id)}>{t("deleteButton")}</button>
-                                    <Link to={'/update/' + item._id}>{t("updateButton")}</Link>
+                                <li>
+                                    {/* <Link to={'/update/' + item._id}>{t("Profile & Item")}</Link> */}
+                                    <Link to={`/profileanditem/${item.userId}/${item._id}`}>{t("Profile & Item")}</Link>
                                 </li>
                             </ul>
                         ) : <h1>{t("productNotFound")}</h1>

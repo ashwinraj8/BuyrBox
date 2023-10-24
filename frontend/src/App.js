@@ -8,6 +8,9 @@ import Login from './components/Login';
 import AddProduct from './components/AddProduct';
 import ProductList from './components/ProductList';
 import UpdateProduct from './components/UpdateProduct';
+import { ProfileAndItem } from './components/profileAndItem';
+import { ProfileAndListings } from './components/profileAndListings';
+
 
 function App() {
  
@@ -20,6 +23,8 @@ function App() {
             <Route path="/" element={<ProductList />} />
             <Route path="/add" element={<AddProduct />} />
             <Route path="/update/:id" element={<UpdateProduct />} />
+            <Route path="/profileanditem/:userId/:itemId" element={<ProfileAndItem />} />
+            <Route path="/profileandlistings/:userId" element={<ProfileAndListings />} />
             <Route path="/logout" element={<h1>Product Logout Component</h1>} />
             <Route path="/profile" element={<h1>Product Profile Component</h1>} />
           </Route>
