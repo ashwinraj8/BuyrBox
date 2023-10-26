@@ -50,6 +50,31 @@ app.get('/users/:userId',async(req,res)=>{
     }
 })
 
+app.post('/users/:userId/interested', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { name, id } = req.body;
+  
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      const interestedUser = { name, id };
+  
+      //Add new interested user
+      user.interestedUsers.push(interestedUser);
+  
+      // Save the updated user document
+      await user.save();
+  
+      res.status(201).json(user); // Return the updated user with the new interested User
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
 app.post('/add-product', async (req, res) => {
     let product = new Products(req.body);
     let result = await product.save();

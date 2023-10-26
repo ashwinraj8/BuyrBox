@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import auth from '../auth/authentication';
 
 export const ProfileAndItem = () => {
   const { userId, itemId } = useParams();
@@ -8,6 +9,10 @@ export const ProfileAndItem = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const showInterest = async ()=>{
+    console.log(JSON.parse(auth));
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +70,7 @@ export const ProfileAndItem = () => {
           <div>
             <div>Name: {item.name}</div>
             <div>Price: {item.price}</div>
+            <button onClick={showInterest}>Show Interest</button>
           </div>
         )}
       </div>
