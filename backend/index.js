@@ -36,6 +36,20 @@ app.post('/login', async (req, resp) => {
     }
 })
 
+app.get('/users/:userId',async(req,res)=>{
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
+
 app.post('/add-product', async (req, res) => {
     let product = new Products(req.body);
     let result = await product.save();
@@ -48,6 +62,22 @@ app.get('/products', async (req, res) => {
     else res.send({ result: 'No products found' })
 })
 
+app.get('/products/:userId', async (req, res) => {
+   
+    try {
+      const userId = req.params.userId;
+      const products = await Products.find({userId});
+  
+      if (products.length > 0) {
+        res.send(products);
+      } else {
+        res.send({ result: 'No products found for this user' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
 
 app.delete('/product/:id', async (req, res) => {
     // res.send('app is working..')
@@ -57,10 +87,8 @@ app.delete('/product/:id', async (req, res) => {
 });
 
 app.get('/product/:id', async (req, res) => {
-    // res.send('app is working..')
 
     const result = await Products.findOne({ _id: req.params.id });
-    // res.send(result);
     if (result) {
         res.send(result);
     } else {
