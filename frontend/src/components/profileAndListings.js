@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export const ProfileAndListings = () => {
     const { userId, itemId } = useParams();
@@ -27,7 +28,7 @@ export const ProfileAndListings = () => {
                 const userData = userResponse.data;
 
                 setItems(itemData);
-                console.log('itemResponse---->', itemResponse);
+                console.log('itemResponse---->', itemData);
                 setUser(userData);
                 console.log('userData-------->>', userData);
                 setError(null);
@@ -61,16 +62,17 @@ export const ProfileAndListings = () => {
                 )}
                 <br></br>
                 <div>Item Description</div>
-                {items.length && (
+                {items.length ? (
                     <ul>
                         {items.map((item, key) => (
                             <li key={key}>
                                 <div>Name: {item.name}</div>
                                 <div>Price: {item.price}</div>
+                                <Link to={'/update/' + item._id}>Edit</Link>
                             </li>
                         ))}
                     </ul>
-                )}
+                ):<div>{items.result}</div>}
             </div>
         </>
     );
