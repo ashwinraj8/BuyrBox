@@ -26,6 +26,7 @@ const Login = ()=>{
         if (result.name) {
             localStorage.setItem('user',JSON.stringify(result));
             naviagte('/');
+            window.location.reload();
         } else {
             alert('please enter corect details!')
         }

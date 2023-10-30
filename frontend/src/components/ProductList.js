@@ -116,7 +116,7 @@ const ProductList = () => {
                                 <li>{item.category}</li>
                                 <li>
                                     {/* <Link to={'/update/' + item._id}>{t("Profile & Item")}</Link> */}
-                                    <Link to={`/profileanditem/${item.userId}/${item._id}`}>{t("Profile & Item")}</Link>
+                                    <Link to={`/profileanditem/${item.userId}/${item._id}/${item.name}`}>{t("Profile & Item")}</Link>
                                 </li>
                             </ul>
                         ) : <h1>{t("productNotFound")}</h1>

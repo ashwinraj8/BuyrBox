@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import auth from '../auth/authentication';
 
 const Nav = () => {
     const naviagte = useNavigate();
+
     const logout = () => {
         localStorage.clear();
         naviagte('/signup');
+        window.location.reload();
     }
     return (
         <div>
@@ -19,7 +21,7 @@ const Nav = () => {
                 <li><Link to="/add">Add</Link></li>
                 <li><Link to={`/profileandlistings/${JSON.parse(auth)._id}`}>Profile & Listings</Link></li>
                 {/* <li></li> */}
-                <li><Link to='/profile/'>Notification</Link></li>
+                <li><Link to='/notifications/'>Notification</Link></li>
                 <li><Link onClick={logout} to="/signup ">Logout ({JSON.parse(auth).name})</Link></li>
                 {/* <li><Link to="/login">Login</Link></li> */}
                 {/* <li>{auth ? <Link onClick={logout} to="/signup ">Logout</Link> :  <Link to="/signup">SignUp</Link>}</li> */}

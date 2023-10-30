@@ -4,7 +4,7 @@ import axios from 'axios';
 import auth from '../auth/authentication';
 
 export const ProfileAndItem = () => {
-  const { userId, itemId } = useParams();
+  const { userId, itemId,itemName } = useParams();
   const [item, setItem] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,6 +12,24 @@ export const ProfileAndItem = () => {
 
   const showInterest = async ()=>{
     console.log(JSON.parse(auth));
+    console.log('For interset -->', userId);
+    console.log('Item name===>',itemName);
+    try {
+      const interestedUserName = JSON.parse(auth).name;
+      const interestedUserId = JSON.parse(auth)._id;
+      console.log('interestedUserId',interestedUserId);
+      const response = await axios.post(`http://localhost:5000/users/${userId}/interested`, {
+        name: interestedUserName,
+        id: interestedUserId,
+        itemId,
+        itemName,
+      });
+      console.log('Interest shared with the Owner', response.data);
+      alert('Interest shared with the Owner!')
+    } catch (error) {
+      console.error('Error in sharing your interest, please try again', error);
+      alert('Error in sharing your interest, please try again!')
+    }
   }
 
   useEffect(() => {

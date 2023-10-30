@@ -50,18 +50,39 @@ app.get('/users/:userId',async(req,res)=>{
     }
 })
 
+app.get('/users/:userId/interestedUsers', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+  
+      // Find the user by their userId
+      const user = await User.findOne({ _id: userId });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Extract interestedUsers from the user document
+      const interestedUsers = user.interestedUsers;
+  
+      res.status(200).json(interestedUsers);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  });
+  
+
 app.post('/users/:userId/interested', async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { name, id } = req.body;
-  
+      const { name, id,itemId,itemName } = req.body;
+        console.log(req.body);
       const user = await User.findById(userId);
   
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
   
-      const interestedUser = { name, id };
+      const interestedUser = { name, id,itemId,itemName };
   
       //Add new interested user
       user.interestedUsers.push(interestedUser);
